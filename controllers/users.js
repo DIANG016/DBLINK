@@ -7,6 +7,7 @@ const sharp = require('sharp');
 const { nanoid } = require('nanoid');
 const { registrationSchema } = require('../schemas/schemas');
 const { getConnection } = require('../db/db');
+
 const anonymousUsers = async (req, res, next) => {
   try {
     await registrationSchema.validateAsync(req.body);
@@ -128,8 +129,8 @@ const editUser = async (req, res, next) => {
   let connection;
 
   try {
+    await registrationSchema.validateAsync(req.body);
     connection = await getConnection();
-
     // Cosas que podemos editar: email, nombre, avatar
     // Sacar id de req.params
     const { id } = req.params; // este es el id de usuario que queremos editar
