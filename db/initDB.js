@@ -11,7 +11,8 @@ async function main() {
     console.log('Borrando tablas existentes');
 
     await connection.query('DROP TABLE IF EXISTS users');
-
+    await connection.query('DROP TABLE IF EXISTS links');
+    await connection.query('DROP TABLE IF EXISTS votes');
 
     console.log('Creando tablas');
 
@@ -26,7 +27,29 @@ async function main() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await connection.query(`
+    CREATE TABLE links (
+      id INTEGER PRIMARY KEY AUTO_INCREMENT,
+      user_id INTEGER NOT NULL,
+      link VARCHAR(800) NOT NULL,
+      titulo VARCHAR(100),
+      descripcion VARCHAR(300),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+  `);
 
+    await connection.query(`
+      CREATE TABLE votes (
+        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        user_id INTEGER,
+        link_id INTEGER,
+        vote TINYINT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (link_id) REFERENCES links(id)
+      )
+    `);
   } catch (error) {
     console.error(error);
   } finally {
