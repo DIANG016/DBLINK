@@ -1,9 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
 
-const app = express();
-
-// Middleware de gestión de errores
 const {
   anonymousUsers,
   getAnonymousUsersController,
@@ -16,10 +14,17 @@ const {
   newLinkController,
   getSingleLinkController,
   deleteLinkController,
-  //editUser,
 } = require('./controllers/links');
 
 const { authUser } = require('./middlewares/auth');
+const { VotesController, getVotesController } = require('./controllers/votes');
+
+const app = express();
+
+app.use(fileUpload());
+app.use(express.json());
+app.use(morgan('dev'));
+app.use('/uploads', express.static('./uploads'));
 
 //Rutas de usuario
 app.post('/user', anonymousUsers); //nos permite registrar
@@ -32,6 +37,10 @@ app.post('/', authUser, newLinkController); //creo los link
 app.get('/', getLinksController); //listo los link
 app.get('/link/:id', getSingleLinkController); //Devuelvo un link
 app.delete('/link/:id', authUser, deleteLinkController); //borro un link
+
+//ruta de votos
+app.post('/votes/:id', authUser, VotesController);
+app.get('/votes', getVotesController);
 
 // Middleware de 404
 app.use((req, res) => {
