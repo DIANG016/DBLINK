@@ -11,11 +11,27 @@ const {
   editUser,
 } = require('./controllers/users');
 
+const {
+  getLinksController,
+  newLinkController,
+  getSingleLinkController,
+  deleteLinkController,
+  //editUser,
+} = require('./controllers/links');
+
+const { authUser } = require('./middlewares/auth');
+
 //Rutas de usuario
 app.post('/user', anonymousUsers); //nos permite registrar
 app.get('/user/:id', getAnonymousUsersController); //nos da informacion de un usuario
 app.post('/login', loginController); //nos permite logearnos
 app.put('/user/:id', authUser, editUser); //modificar usuario
+
+//Rutas de link
+app.post('/', authUser, newLinkController); //creo los link
+app.get('/', getLinksController); //listo los link
+app.get('/link/:id', getSingleLinkController); //Devuelvo un link
+app.delete('/link/:id', authUser, deleteLinkController); //borro un link
 
 // Middleware de 404
 app.use((req, res) => {
