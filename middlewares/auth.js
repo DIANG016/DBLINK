@@ -10,13 +10,10 @@ const authUser = (req, res, next) => {
     // Comprobamos que el token sea correcto
     let token;
     try {
-        token = jwt.verify(authorization, process.env.SECRET);
-      } catch {
-        throw generateError('El token no es válido', 401);
-      }
-
-    // Metemos la información del token en la request para usarla en el controlador
-    // req.auth = token; si quiero saber cuando fue creado el token, 
+      token = jwt.verify(authorization, process.env.SECRET);
+    } catch {
+      throw generateError('El token no es válido', 401);
+    }
 
     req.userId = token.id;
     // Saltamos al controlador

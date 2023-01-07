@@ -4,9 +4,8 @@ const { generateError, createPathIfNotExists } = require('../helpers');
 const { createUser, getUserById, getUserByEmail } = require('../db/users');
 const path = require('path');
 const sharp = require('sharp');
-const {nanoid} = require('nanoid');
-const {registrationSchema} = require('../schemas/schemas')
-
+const { nanoid } = require('nanoid');
+const { registrationSchema } = require('../schemas/schemas');
 
 const anonymousUsers = async (req, res, next) => {
   try {
@@ -32,7 +31,13 @@ const anonymousUsers = async (req, res, next) => {
       await photo.toFile(path.join(uploadsDir, photoFileName));
     }
 
-    const id = await createUser(nombre, email, password, biography, photoFileName);
+    const id = await createUser(
+      nombre,
+      email,
+      password,
+      biography,
+      photoFileName
+    );
     console.log(id);
     res.send({
       status: 'ok',
@@ -94,8 +99,80 @@ const loginController = async (req, res, next) => {
   }
 };
 
+//selecciono por id
+
+const UserById = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+      SELECT * FROM users WHERE id = ?
+    `,
+      [id]
+    );
+
+    if (result.length === 0) {
+      throw generateError(`El user con id: ${id} no existe`, 404);
+    }
+
+    return result[0];
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+const editUser = async (req, res, next) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    // Cosas que podemos editar: email, nombre, avatar
+    // Sacar id de req.params
+    const { id } = req.params; // este es el id de usuario que queremos editar
+
+    const user = await UserById(id);
+
+    // Sacar name y email de req.body
+    const { name, email, password, biography } = req.body;
+    // Conseguir la información del link que quiero borrar
+
+    // Comprobar que el usuario del token es el mismo que creó el usuario
+    if (req.userId !== user.id) {
+      throw generateError(
+        'Estás intentando modificar los datos de otro usuario',
+        401
+      );
+    }
+
+    // Actualizar los datos finales
+
+    await connection.query(
+      `
+        UPDATE users
+        SET name=?, email=?, password=? ,biography=?
+        WHERE id=?
+      `,
+      [name, email, password, id, biography]
+    );
+
+    res.send({
+      status: 'ok',
+      message: 'Datos de usuario actualizados',
+    });
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 module.exports = {
   anonymousUsers,
   getAnonymousUsersController,
   loginController,
+  editUser,
 };

@@ -18,11 +18,7 @@ const VotesController = async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log(req.params);
-    /* const links = await getAllLinks();
-    res.send({
-        status: 'ok',
-        data: links,
-    });*/
+
     // Conseguir la información del link que quiero votar
     const link = await getLinkById(id);
 
