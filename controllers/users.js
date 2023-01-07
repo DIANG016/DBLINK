@@ -6,7 +6,7 @@ const path = require('path');
 const sharp = require('sharp');
 const { nanoid } = require('nanoid');
 const { registrationSchema } = require('../schemas/schemas');
-
+const { getConnection } = require('../db/db');
 const anonymousUsers = async (req, res, next) => {
   try {
     await registrationSchema.validateAsync(req.body);
@@ -137,7 +137,7 @@ const editUser = async (req, res, next) => {
     const user = await UserById(id);
 
     // Sacar name y email de req.body
-    const { name, email, password, biography } = req.body;
+    const { nombre, email, password, biography } = req.body;
     // Conseguir la información del link que quiero borrar
 
     // Comprobar que el usuario del token es el mismo que creó el usuario
@@ -153,10 +153,10 @@ const editUser = async (req, res, next) => {
     await connection.query(
       `
         UPDATE users
-        SET name=?, email=?, password=? ,biography=?
+        SET nombre=?, email=?, password=? ,biography=?
         WHERE id=?
       `,
-      [name, email, password, id, biography]
+      [nombre, email, password, biography, id]
     );
 
     res.send({
