@@ -1,7 +1,7 @@
 const { getAllVotes, createVotes } = require('../db/votes');
 const { getLinkById, getAllLinks } = require('../db/links');
 const { generateError } = require('../helpers');
-
+const { validationVote } = require('../schemas/schemas');
 const getVotesController = async (req, res, next) => {
   try {
     const votes = await getAllVotes();
@@ -16,6 +16,7 @@ const getVotesController = async (req, res, next) => {
 // controlador del nuevo voto
 const VotesController = async (req, res, next) => {
   try {
+    await validationVote.validateAsync(req.body);
     const { id } = req.params;
     console.log(req.params);
 
