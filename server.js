@@ -19,7 +19,11 @@ const {
 } = require('./controllers/links');
 
 const { authUser } = require('./middlewares/auth');
-const { VotesController, getVotesController } = require('./controllers/votes');
+const {
+  votesController,
+  getVotesController,
+  getTotalVotesController,
+} = require('./controllers/votes');
 
 const app = express();
 
@@ -41,8 +45,9 @@ app.get('/link/:id', getSingleLinkController); //Devuelvo un link
 app.delete('/link/:id', authUser, deleteLinkController); //borro un link
 
 //ruta de votos
-app.post('/votes/:id', authUser, VotesController);
+app.post('/votes/:id', authUser, votesController);
 app.get('/votes', getVotesController);
+app.get('/totalvotes', getTotalVotesController);
 
 // Middleware de 404
 app.use((req, res) => {
