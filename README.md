@@ -1,3 +1,5 @@
+Para levantar el servidor node server.js
+
 # APP para compartir enlaces
 
 API que permite a los usuarios registrarse y compartir enlaces web que
@@ -50,5 +52,4 @@ consideren interesantes. Otros usuarios pueden votar al enlace que le gusta.
 - **DELETE /link/:id** Borra un link sólo si eres quien lo creó
 - **POST /votes:id** Votar una entrada
 - **GET /votes** Ver votos de una entrada
-
-ok
+- **GET /totalvotes** Ver total de votos de cada link
