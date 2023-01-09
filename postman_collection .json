@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "80c408d4-e9cc-4970-b022-a01e1074e92e",
+		"name": "DBLINK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24930090"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Anonymous User - Crea nuevo usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "Pedro",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "pedro@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "biography",
+									"value": "soy pedro",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/jesus/OneDrive/Escritorio/jesus.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4000/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Anonymous User - Permite ubicar un usuario por su id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Permite logear un usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"email\": \"jesusmen280000000000000@gmail.com\",\r\n        \"password\": \"123456\"\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit user - Permite editar un usuario",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Links",
+			"item": [
+				{
+					"name": "New link - Crea un nuevo link",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMjc5ODcxLCJleHAiOjE2NzU4NzE4NzF9.37uztm0HIFcW-mVnaVDVS-qEscQUACxswHSAwgoJd7Q",
+								"description": "jesus",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjczMjgwMDYwLCJleHAiOjE2NzU4NzIwNjB9.fCvxkPomt2uAUUAxlCmIF2uaTQMXULLij7wsjX2Xvh0",
+								"description": "teodoro",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjczMjgwMjAzLCJleHAiOjE2NzU4NzIyMDN9.N5lyzGYoPlQi0IjhB6JTtkgb5qkWSNP2i4Avl5xpaQY",
+								"description": "angel",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjczMjgwMzM5LCJleHAiOjE2NzU4NzIzMzl9.nze9MGIBoUxum473kdBTgdIF9rjdhWLkEvANDMkzeY8",
+								"description": "abrahan",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjczMjgwNDg4LCJleHAiOjE2NzU4NzI0ODh9.wR_KvJkKYwjPCG8lb75j0fY2SMRjVbCEa9k-raA7rhk",
+								"description": "Pedro",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"link\":\"https://profile.w3schools.com/refresh-session?redirect_url=https%3A%2F%2Fwww.w3schools.com%2Fjsref%2Fjsref_obj_string.asp\",\r\n    \"titulo\": \"otro link creado por el usuario 1\",\r\n    \"descripcion\": \"Su Academia, sive de iudicio erga verum ex ipsis primis fontibus, escrita en latín y publicada en Amberes en 1594\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete link - Permite borrar un link",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:4000/link/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"link",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get link - Listar link",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get single link - Permite ver un link en específico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/link/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"link",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "votes",
+			"item": [
+				{
+					"name": "Vote - Permite votar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vote\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/votes/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"votes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get votes - Listar votos",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get total votes - Permite contar votos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/totalvotes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"totalvotes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
