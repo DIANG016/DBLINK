@@ -1,6 +1,21 @@
 const { generateError } = require('../helpers');
 const { getConnection } = require('./db');
 
+const totalVotes = async () => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    //permite contar todos los  votos
+    const [result] = await connection.query(`
+    select link_id, count(*) votos from votes group by link_id;
+        `);
+    return result;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 const getAllVotes = async () => {
   let connection;
 
@@ -16,7 +31,7 @@ const getAllVotes = async () => {
   }
 };
 
-const createVotes = async (user_id, vote, link_id) => {
+const createVotes = async (user_id, link_id, vote) => {
   let connection;
 
   try {
@@ -24,10 +39,10 @@ const createVotes = async (user_id, vote, link_id) => {
 
     const [result] = await connection.query(
       `
-        INSERT INTO votes (user_id, vote, link_id)
+        INSERT INTO votes (user_id, link_id, vote)
         VALUES(?, ?, ?)
       `,
-      [user_id, vote, link_id]
+      [user_id, link_id, vote]
     );
 
     return result.insertId;
@@ -39,4 +54,5 @@ const createVotes = async (user_id, vote, link_id) => {
 module.exports = {
   getAllVotes,
   createVotes,
+  totalVotes,
 };
