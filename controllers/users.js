@@ -8,6 +8,7 @@ const { nanoid } = require('nanoid');
 const { registrationSchema } = require('../schemas/schemas');
 const { getConnection } = require('../db/db');
 
+// registrar nuevo usuario
 const anonymousUsers = async (req, res, next) => {
   try {
     await registrationSchema.validateAsync(req.body);
@@ -42,12 +43,14 @@ const anonymousUsers = async (req, res, next) => {
     console.log(id);
     res.send({
       status: 'ok',
-      message: `User created with id: ${id}`,
+      message: `${nombre} te has registrado correctamente`,
     });
   } catch (error) {
     next(error);
   }
 };
+
+//Controlador de cada usuario por Id
 
 const getAnonymousUsersController = async (req, res, next) => {
   try {
@@ -63,6 +66,8 @@ const getAnonymousUsersController = async (req, res, next) => {
     next(error);
   }
 };
+
+//controlador de la login
 
 const loginController = async (req, res, next) => {
   try {
@@ -85,9 +90,9 @@ const loginController = async (req, res, next) => {
     // Creo el payload del token
     const payload = { id: user.id };
 
-    // Firmo el token, con 30 días de expiración
+    // Firmo el token, con 2 horas de expiración
     const token = jwt.sign(payload, process.env.SECRET, {
-      expiresIn: '30d',
+      expiresIn: '2h',
     });
 
     // Envío el token
@@ -100,7 +105,7 @@ const loginController = async (req, res, next) => {
   }
 };
 
-//selecciono por id
+//selecciono usuario por id
 
 const UserById = async (id) => {
   let connection;
@@ -124,6 +129,8 @@ const UserById = async (id) => {
     if (connection) connection.release();
   }
 };
+
+//editar usuario
 
 const editUser = async (req, res, next) => {
   let connection;
@@ -176,4 +183,5 @@ module.exports = {
   getAnonymousUsersController,
   loginController,
   editUser,
+  UserById
 };

@@ -1,7 +1,9 @@
-const { getAllVotes, createVotes, totalVotes } = require('../db/votes');
+const { deleteVotes, createVotes, totalVotes, getVotesById, votoPorId } = require('../db/votes');
 const { getLinkById, getAllLinks } = require('../db/links');
 const { generateError } = require('../helpers');
 const { validationVote } = require('../schemas/schemas');
+
+//votos totales
 
 const getTotalVotesController = async (req, res, next) => {
   try {
@@ -15,17 +17,20 @@ const getTotalVotesController = async (req, res, next) => {
   }
 };
 
-const getVotesController = async (req, res, next) => {
+// ubicar un voto específico según su id
+const getSingleVotesController = async (req, res, next) => {
   try {
-    const votes = await getAllVotes();
+    const { id } = req.params;
+    const vote = await getVotesById(id);
+
     res.send({
       status: 'ok',
-      data: votes,
+      data: vote,
     });
   } catch (error) {
     next(error);
   }
-};
+};  
 
 //controlador del nuevo voto
 const votesController = async (req, res, next) => {
@@ -33,31 +38,74 @@ const votesController = async (req, res, next) => {
     await validationVote.validateAsync(req.body);
     const { id } = req.params;
 
-    // Conseguir la información del link que quiero borrar
+    // Conseguir la información del link 
     const link = await getLinkById(id);
+    
 
-    // Comprobar que el usuario del token es el mismo que creó el link
+   // Compruebo que el usuario del token es el mismo que creó el link
     if (req.userId == link.user_id) {
       throw generateError(
         'Estás intentando votar por un link que has creado',
         401
       );
-    }
-    //procedemos a votar
+    } 
+    
+    const votes = await votoPorId(id, req.userId);
 
+    console.log("votes", votes);
+     if ( votes.length > 0) {
+      throw generateError(
+        'Solo se puede votar una vez',
+        401
+      );
+    }  
+
+    //console.log(votes);
     const { vote } = req.body;
-    await createVotes(req.userId, link.user_id, vote);
+    await createVotes(req.userId, link.id, vote);
     res.send({
       status: 'ok',
       message: `Has votado por el link con id: ${id} correctamente`,
+      
+    });
+ 
+  } catch (error) {
+    next(error);
+  }
+
+};
+
+//borrar voto
+
+const deleteVotesController = async (req, res, next) => {
+  try {
+    await validationVote.validateAsync(req.body);
+    const { id } = req.params;
+
+    // Conseguir la información del voto 
+    const votes = await getVotesById(id);
+
+    // Comprobar que el usuario del token es el mismo que creó el link
+    if (req.userId !== votes.user_id) {
+      throw generateError(
+        'Estás intentando borrar un voto que no es tuyo',
+        401
+      );
+    }
+    await deleteVotes(id);
+
+    res.send({
+      status: 'ok',
+      message: `El voto con id: ${id} fue borrado el voto correctamente`,
     });
   } catch (error) {
     next(error);
   }
-};
+}; 
 
 module.exports = {
   getTotalVotesController,
-  getVotesController,
+  deleteVotesController,
   votesController,
+  getSingleVotesController,
 };

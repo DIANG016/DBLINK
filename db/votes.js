@@ -1,6 +1,7 @@
 const { generateError } = require('../helpers');
 const { getConnection } = require('./db');
 
+//conseguir el total de los votos
 const totalVotes = async () => {
   let connection;
 
@@ -8,7 +9,7 @@ const totalVotes = async () => {
     connection = await getConnection();
     //permite contar todos los  votos
     const [result] = await connection.query(`
-    select link_id, count(*) votos from votes group by link_id;
+    SELECT link_id as Link, COUNT(vote) as totalVotos FROM votes group by link_id ORDER BY totalVotos DESC;
         `);
     return result;
   } finally {
@@ -16,21 +17,7 @@ const totalVotes = async () => {
   }
 };
 
-const getAllVotes = async () => {
-  let connection;
-
-  try {
-    connection = await getConnection();
-    //permite leer todos los  votos
-    const [result] = await connection.query(`
-          SELECT * FROM votes ORDER BY created_at DESC
-        `);
-    return result;
-  } finally {
-    if (connection) connection.release();
-  }
-};
-
+// Crear votos
 const createVotes = async (user_id, link_id, vote) => {
   let connection;
 
@@ -51,8 +38,74 @@ const createVotes = async (user_id, link_id, vote) => {
   }
 };
 
+//borrar votos
+const deleteVotes = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    await connection.query(
+      `
+      DELETE FROM votes
+      WHERE id = ?
+      `,
+      [id]
+    );
+
+    return;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+//ubicar un voto según id
+const getVotesById = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+      SELECT * FROM votes WHERE id = ?
+    `,
+      [id]
+    );
+
+    if (result.length === 0) {
+      throw generateError(`El voto con id: ${id} no existe`, 404);
+    }
+
+    return result[0];
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+//ubicar un voto según el id
+const votoPorId = async (id_link, userId) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+      SELECT * FROM votes WHERE link_id = ? AND user_id = ?
+    `,
+      [id_link, userId]
+    );
+  
+    return result;
+  } finally {
+    if (connection) connection.release();
+  }}
+
 module.exports = {
-  getAllVotes,
+  getVotesById,
   createVotes,
   totalVotes,
+  deleteVotes,
+  votoPorId,
 };
