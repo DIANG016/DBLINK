@@ -47,7 +47,8 @@ async function main() {
         vote TINYINT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (link_id) REFERENCES links(id)
+        FOREIGN KEY (link_id) REFERENCES links(id),
+        UNIQUE(link_id, user_id)
       )
     `);
   } catch (error) {

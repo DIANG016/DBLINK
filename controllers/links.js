@@ -1,15 +1,14 @@
-const { createLink, getAllLinks, getLinkById, deleteLinkById } = require("../db/links");
+const { createLink, getAllLinks, getLinkById, deleteLinkById, deleteVotesByLinkId } = require("../db/links");
 const { generateError } = require('../helpers');
 const {validationLink} = require('../schemas/schemas')
 
-
-// Listar links/get link
+// Listar todos los links
 const getLinksController = async (req, res, next) => {
   try {
     const links = await getAllLinks();
     res.send({
         status: 'ok',
-        data: links,
+        data: links
     });
   } catch (error) {
     next(error);
@@ -46,7 +45,9 @@ const getSingleLinkController = async (req, res, next) => {
     }
   };
 
+  //borrar un link
   const deleteLinkController = async (req, res, next) => {
+
     try {
       //req.userId
       const { id } = req.params;
@@ -61,8 +62,16 @@ const getSingleLinkController = async (req, res, next) => {
           401
         );
       }
-  
-      // Borrar el tweet
+      const vote = await deleteVotesByLinkId(id);
+      //comprobar si el link tiene un voto asociado
+      if (req.vote == link.user_id) {
+        throw generateError(
+          `Estás intentando borrar un ${vote} que no has creado`,
+          401
+        );
+      }
+
+      // Borrar el link
       await deleteLinkById(id);
   
       res.send({
