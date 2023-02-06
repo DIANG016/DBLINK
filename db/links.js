@@ -1,6 +1,27 @@
 const { generateError } = require('../helpers');
 const { getConnection } = require('./db');
 
+// Crear un nuevo link
+const createLink = async (user_id, enlace, titulo, descripcion, image = "") => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+        INSERT INTO links (user_id, enlace, titulo, descripcion, image)
+        VALUES(?, ?, ?, ?, ?)
+      `,
+      [user_id, enlace, titulo, descripcion, image]
+    );
+
+    return result.insertId;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 //Borrar link
 const deleteLinkById = async (id) => {
   let connection;
@@ -28,11 +49,11 @@ const deleteVotesByLinkId = async (id) => {
   try {
     connection = await getConnection();
 
-    // Borrar votos asociados a link_id
+    // Borrar votos asociados a enlace_id
     await connection.query(
       `
       DELETE FROM votes
-      WHERE link_id=?
+      WHERE enlace_id=?
       `,
       [id]
     );
@@ -75,30 +96,10 @@ const getAllLinks = async () => {
     connection = await getConnection();
     //permite leer todos los links
     const [result] = await connection.query(`
-    SELECT * FROM links left JOIN (select link_id, COUNT(vote) as votosTotales from votes group by link_id) votes ON links.id = link_id  order by votosTotales desc
+    SELECT * FROM links left JOIN (select enlace_id, COUNT(vote) as votosTotales from votes group by enlace_id) votes ON links.id = enlace_id  order by votosTotales desc
       `);
 
     return result;
-  } finally {
-    if (connection) connection.release();
-  }
-};
-
-const createLink = async (user_id, link, titulo, descripcion) => {
-  let connection;
-
-  try {
-    connection = await getConnection();
-
-    const [result] = await connection.query(
-      `
-        INSERT INTO links (user_id, link, titulo, descripcion)
-        VALUES(?, ?, ?, ?)
-      `,
-      [user_id, link, titulo, descripcion]
-    );
-
-    return result.insertId;
   } finally {
     if (connection) connection.release();
   }
