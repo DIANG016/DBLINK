@@ -24,7 +24,7 @@ const registrationSchema = Joi.object().keys({
 });
 
 const validationLink = Joi.object().keys({
-  link: Joi.string().uri().error(new Error('Debe ser una url válida')),
+  enlace: Joi.string().uri().error(new Error('Debe ser una url válida')),
   titulo: Joi.string()
     .required()
     .min(3)

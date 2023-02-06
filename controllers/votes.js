@@ -39,11 +39,11 @@ const votesController = async (req, res, next) => {
     const { id } = req.params;
 
     // Conseguir la información del link 
-    const link = await getLinkById(id);
+    const enlace = await getLinkById(id);
     
 
    // Compruebo que el usuario del token es el mismo que creó el link
-    if (req.userId == link.user_id) {
+    if (req.userId == enlace.user_id) {
       throw generateError(
         'Estás intentando votar por un link que has creado',
         401
@@ -52,7 +52,6 @@ const votesController = async (req, res, next) => {
     
     const votes = await votoPorId(id, req.userId);
 
-    console.log("votes", votes);
      if ( votes.length > 0) {
       throw generateError(
         'Solo se puede votar una vez',
@@ -60,9 +59,8 @@ const votesController = async (req, res, next) => {
       );
     }  
 
-    //console.log(votes);
     const { vote } = req.body;
-    await createVotes(req.userId, link.id, vote);
+    await createVotes(req.userId, enlace.id, vote);
     res.send({
       status: 'ok',
       message: `Has votado por el link con id: ${id} correctamente`,

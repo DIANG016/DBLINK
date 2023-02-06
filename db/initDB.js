@@ -31,9 +31,10 @@ async function main() {
     CREATE TABLE links (
       id INTEGER PRIMARY KEY AUTO_INCREMENT,
       user_id INTEGER NOT NULL,
-      link VARCHAR(800) NOT NULL,
+      enlace VARCHAR(800) NOT NULL,
       titulo VARCHAR(100),
       descripcion VARCHAR(300),
+      image VARCHAR(100),
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
       );
@@ -43,12 +44,12 @@ async function main() {
       CREATE TABLE votes (
         id INTEGER PRIMARY KEY AUTO_INCREMENT,
         user_id INTEGER,
-        link_id INTEGER,
+        enlace_id INTEGER,
         vote TINYINT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (link_id) REFERENCES links(id),
-        UNIQUE(link_id, user_id)
+        FOREIGN KEY (enlace_id) REFERENCES links(id),
+        UNIQUE(enlace_id, user_id)
       )
     `);
   } catch (error) {

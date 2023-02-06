@@ -9,7 +9,7 @@ const totalVotes = async () => {
     connection = await getConnection();
     //permite contar todos los  votos
     const [result] = await connection.query(`
-    SELECT link_id as Link, COUNT(vote) as totalVotos FROM votes group by link_id ORDER BY totalVotos DESC;
+    SELECT enlace_id as Link, COUNT(vote) as totalVotos FROM votes group by enlace_id ORDER BY totalVotos DESC;
         `);
     return result;
   } finally {
@@ -18,7 +18,7 @@ const totalVotes = async () => {
 };
 
 // Crear votos
-const createVotes = async (user_id, link_id, vote) => {
+const createVotes = async (user_id, enlace_id, vote) => {
   let connection;
 
   try {
@@ -26,10 +26,10 @@ const createVotes = async (user_id, link_id, vote) => {
 
     const [result] = await connection.query(
       `
-        INSERT INTO votes (user_id, link_id, vote)
+        INSERT INTO votes (user_id, enlace_id, vote)
         VALUES(?, ?, ?)
       `,
-      [user_id, link_id, vote]
+      [user_id, enlace_id, vote]
     );
 
     return result.insertId;
@@ -92,7 +92,7 @@ const votoPorId = async (id_link, userId) => {
 
     const [result] = await connection.query(
       `
-      SELECT * FROM votes WHERE link_id = ? AND user_id = ?
+      SELECT * FROM votes WHERE enlace_id = ? AND user_id = ?
     `,
       [id_link, userId]
     );
