@@ -10,7 +10,7 @@ const createLink = async (user_id, enlace, titulo, descripcion, image = "") => {
 
     const [result] = await connection.query(
       `
-        INSERT INTO links (user_id, enlace, titulo, descripcion, image)
+        INSERT INTO enlaces (user_id, enlace, titulo, descripcion, image)
         VALUES(?, ?, ?, ?, ?)
       `,
       [user_id, enlace, titulo, descripcion, image]
@@ -31,7 +31,7 @@ const deleteLinkById = async (id) => {
 
     await connection.query(
       `
-        DELETE FROM links WHERE id = ?
+        DELETE FROM enlaces WHERE id = ?
       `,
       [id]
     );
@@ -73,7 +73,7 @@ const getLinkById = async (id) => {
 
     const [result] = await connection.query(
       `
-        SELECT * FROM links WHERE id = ? 
+        SELECT * FROM enlaces WHERE id = ? 
       `,
       [id]
     );
@@ -96,7 +96,7 @@ const getAllLinks = async () => {
     connection = await getConnection();
     //permite leer todos los links
     const [result] = await connection.query(`
-    SELECT * FROM links left JOIN (select enlace_id, COUNT(vote) as votosTotales from votes group by enlace_id) votes ON links.id = enlace_id  order by votosTotales desc
+    SELECT * FROM enlaces left JOIN (select enlace_id, COUNT(vote) as votosTotales from votes group by enlace_id) votes ON enlaces.id = enlace_id  order by votosTotales desc
       `);
 
     return result;

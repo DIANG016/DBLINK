@@ -45,10 +45,10 @@ const newLinkController = async (req, res, next) => {
 // Listar todos los links
 const getLinksController = async (req, res, next) => {
   try {
-    const links = await getAllLinks();
+    const enlaces = await getAllLinks();
     res.send({
         status: 'ok',
-        data: links
+        data: enlaces
     });
   } catch (error) {
     next(error);
