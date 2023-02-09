@@ -8,10 +8,11 @@ const {validationLink} = require('../schemas/schemas')
 //controlador del new link
 const newLinkController = async (req, res, next) => {
   try {
-   await validationLink.validateAsync(req.body);
+  await validationLink.validateAsync(req.body);
    const { enlace, titulo, descripcion } = req.body;
 
    let imageFileName;
+   
    //Procesar la imagen
    if (req.files && req.files.image) {
      //path del directorio uploads
@@ -19,7 +20,7 @@ const newLinkController = async (req, res, next) => {
 
      // Creo el directorio si no existe
      await createPathIfNotExists(uploadsDir);
-     console.log(req.files.image);
+
      // Procesar la photo
      const image = sharp(req.files.image.data);
      image.resize(500);
@@ -33,9 +34,11 @@ const newLinkController = async (req, res, next) => {
 
 
    const id = await createLink(req.userId, enlace, titulo, descripcion, imageFileName);
+
+   const link = await getLinkById(id);
    res.send({
      status: 'ok',
-     message: `Link con id: ${id} creado correctamente`,
+     data: link,
    });
  } catch (error) {
    next(error);
