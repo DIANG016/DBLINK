@@ -105,6 +105,19 @@ const loginController = async (req, res, next) => {
   }
 };
 
+const getMeController = async (req, res, next) => {
+  try {
+    const user = await getUserById(req.userId, false);
+
+    res.send({
+      status: 'ok',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //selecciono usuario por id
 
 const UserById = async (id) => {
@@ -183,5 +196,6 @@ module.exports = {
   getAnonymousUsersController,
   loginController,
   editUser,
-  UserById
+  UserById,
+  getMeController
 };
