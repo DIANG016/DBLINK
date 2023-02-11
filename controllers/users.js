@@ -7,6 +7,7 @@ const sharp = require('sharp');
 const { nanoid } = require('nanoid');
 const { registrationSchema } = require('../schemas/schemas');
 const { getConnection } = require('../db/db');
+const { getLinksByUserId } = require('../db/links');
 
 // registrar nuevo usuario
 const anonymousUsers = async (req, res, next) => {
@@ -191,11 +192,27 @@ const editUser = async (req, res, next) => {
   }
 };
 
+const getUserLinksController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await getLinksByUserId(id);
+
+    res.send({
+      status: 'ok',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   anonymousUsers,
   getAnonymousUsersController,
   loginController,
   editUser,
   UserById,
-  getMeController
+  getMeController,
+  getUserLinksController,
 };

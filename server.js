@@ -11,6 +11,7 @@ const {
   loginController,
   editUser,
   getMeController,
+  getUserLinksController,
 } = require('./controllers/users');
 
 const {
@@ -38,15 +39,16 @@ app.use(cors())
 
 //Rutas de usuario
 app.post('/user', anonymousUsers); //nos permite registrar
-app.get('/user/:id', authUser, getAnonymousUsersController); //nos da información de un usuario por id
-app.get('/user', authUser, getMeController);// Aporta información de cada usuario
+app.get('/user/:id',  /*authUser,*/  getAnonymousUsersController); //nos da información de un usuario por id
+app.get('/user/:id/enlaces',  /*authUser,*/ getUserLinksController  ); 
+app.get('/user', authUser,  getMeController);// Aporta información de cada usuario
 app.post('/login', loginController); //nos permite logearnos
-app.put('/user/:id', authUser, editUser); //modificar usuario
+app.put('/user/:id', authUser,  editUser); //modificar usuario
 
 //Rutas de link
 app.post('/', authUser, newLinkController); //creo los link
-app.get('/', authUser, getLinksController); //listo los link, incluyendo los votos que tienen cada uno
-app.get('/enlace/:id', authUser, getSingleLinkController, ); //Devuelvo un link
+app.get('/', getLinksController); //listo los link, incluyendo los votos que tienen cada uno
+app.get('/enlace/:id', getSingleLinkController, ); //Devuelvo un link
 app.delete('/enlace/:id',authUser, deleteLinkController); //borro un link
 
 //ruta de votos

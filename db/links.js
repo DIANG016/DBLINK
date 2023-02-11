@@ -73,7 +73,7 @@ const getLinkById = async (id) => {
 
     const [result] = await connection.query(
       `
-        SELECT * FROM enlaces WHERE id = ? 
+      SELECT enlaces.id, enlaces.user_id, enlaces.enlace, enlaces.titulo, enlaces.descripcion, enlaces.image, enlaces.created_at, users.nombre, users.email FROM enlaces LEFT JOIN users on enlaces.user_id = users.id WHERE enlaces.id = ? 
       `,
       [id]
     );
@@ -105,10 +105,31 @@ const getAllLinks = async () => {
   }
 };
 
+
+const getLinksByUserId = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+      SELECT enlaces.enlace, users.email FROM enlaces LEFT JOIN users on enlaces.user_id = users.id group by user_id
+    `,
+      [id]
+    );
+
+    return result;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 module.exports = {
   createLink,
   getAllLinks,
   getLinkById,
   deleteLinkById,
   deleteVotesByLinkId,
+  getLinksByUserId,
 };
