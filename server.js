@@ -39,8 +39,8 @@ app.use(cors())
 
 //Rutas de usuario
 app.post('/user', anonymousUsers); //nos permite registrar
-app.get('/user/:id',  /*authUser,*/  getAnonymousUsersController); //nos da información de un usuario por id
-app.get('/user/:id/enlaces',  /*authUser,*/ getUserLinksController  ); 
+app.get('/user/:id',  authUser, getAnonymousUsersController); //nos da información de un usuario por id
+app.get('/user/:id/enlaces', authUser, getUserLinksController  ); 
 app.get('/user', authUser,  getMeController);// Aporta información de cada usuario
 app.post('/login', loginController); //nos permite logearnos
 app.put('/user/:id', authUser,  editUser); //modificar usuario

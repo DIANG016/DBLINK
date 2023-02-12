@@ -96,7 +96,12 @@ const getAllLinks = async () => {
     connection = await getConnection();
     //permite leer todos los links
     const [result] = await connection.query(`
-    SELECT * FROM enlaces left JOIN (select enlace_id, COUNT(vote) as votosTotales from votes group by enlace_id) votes ON enlaces.id = enlace_id  order by votosTotales desc
+    SELECT enlaces.id, enlaces.user_id, enlaces.enlace, enlaces.titulo, enlaces.descripcion, enlaces.image, enlaces.created_at, users.nombre, users.email, count(vote) as votosTotales 
+FROM enlaces 
+LEFT JOIN users on enlaces.user_id = users.id 
+LEFT JOIN votes on enlaces.id = enlace_id 
+group by enlace_id, id 
+order by votosTotales desc
       `);
 
     return result;
