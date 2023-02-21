@@ -119,7 +119,7 @@ const getLinksByUserId = async (id) => {
 
     const [result] = await connection.query(
       `
-      SELECT enlaces.enlace, users.email FROM enlaces LEFT JOIN users on enlaces.user_id = users.id group by user_id
+      SELECT enlaces.*, users.email FROM enlaces LEFT JOIN users on enlaces.user_id = users.id WHERE enlaces.user_id = ?
     `,
       [id]
     );
