@@ -19,7 +19,7 @@ const anonymousUsers = async (req, res, next) => {
     //Procesar la photo
     if (req.files && req.files.photo) {
       //path del directorio uploads
-      const uploadsDir = path.join(__dirname, '../uploads');
+      const uploadsDir = path.join(__dirname, '../uploads2');
 
       // Creo el directorio si no existe
       await createPathIfNotExists(uploadsDir);
@@ -152,9 +152,8 @@ const editUser = async (req, res, next) => {
   try {
     await registrationSchema.validateAsync(req.body);
     connection = await getConnection();
-    // Cosas que podemos editar: email, nombre, avatar
-    // Sacar id de req.params
-    const { id } = req.params; // este es el id de usuario que queremos editar
+   
+    const { id } = req.params; // 
 
     const user = await UserById(id);
 
