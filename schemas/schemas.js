@@ -39,11 +39,6 @@ const validationLink = Joi.object().keys({
     .error(new Error('La descripción debe tener máximo 200 caracteres')),
 });
 
-const validationVote = Joi.object().keys({
-  vote: Joi.number()
-    .min(1)
-    .max(1)
-    .error(new Error(' el voto Debe ser un punto ')),
-});
 
-module.exports = { registrationSchema, validationLink, validationVote };
+
+module.exports = { registrationSchema, validationLink };
