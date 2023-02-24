@@ -48,7 +48,8 @@ const newLinkController = async (req, res, next) => {
 // Listar todos los links
 const getLinksController = async (req, res, next) => {
   try {
-    const enlaces = await getAllLinks();
+    const userId = req.userId;
+    const enlaces = await getAllLinks({userId});
     res.send({
         status: 'ok',
         data: enlaces

@@ -19,7 +19,7 @@ const anonymousUsers = async (req, res, next) => {
     //Procesar la photo
     if (req.files && req.files.photo) {
       //path del directorio uploads
-      const uploadsDir = path.join(__dirname, '../uploads2');
+      const uploadsDir = path.join(__dirname, '../uploads');
 
       // Creo el directorio si no existe
       await createPathIfNotExists(uploadsDir);
@@ -149,8 +149,16 @@ const UserById = async (id) => {
 const editUser = async (req, res, next) => {
   let connection;
 
+  /*
+  Falta:
+  - soporte para la edición de foto
+  - si se envía contraseña debe encriptarla con bcrypt antes de meterla en la base de datos
+  - si queréis que soporte el cambio de contraseña en en frontend el usuario debería meterla 2 veces y comprobar si son iguales
+  - si no se envía foto (si req.files está vacío) no debería cambiar la foto actual. Esto se hace con lógica de "ifs"
+  */
+
   try {
-    await registrationSchema.validateAsync(req.body);
+    await registrationSchema.validateAsync(req.body); //no podéis usar el mismo schema porque en este caso puede que no vayan algunos de los valores
     connection = await getConnection();
    
     const { id } = req.params; // 

@@ -35,7 +35,7 @@ const getSingleVotesController = async (req, res, next) => {
 //controlador del nuevo voto
 const votesController = async (req, res, next) => {
   try {
-    await validationVote.validateAsync(req.body);
+    
     const { id } = req.params;
 
     // Conseguir la información del link 
