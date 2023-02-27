@@ -215,6 +215,65 @@ const editUser = async (req, res, next) => {
     if (connection) connection.release();
   }
 };
+/***
+ * PASWORD///////
+ */
+
+///////////////////////////////////////////////////////
+const editUserPassword = async (req, res, next) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    await editUserPasswordSchema.validateAsync(req.body);
+    const { id } = req.params; //
+
+    const user = await UserById(id);
+
+    // Sacar  de req.body
+    const { password, newPassword } = req.body;
+
+    if (!password || !newPasword) {
+      throw generateError('la contraseña no existe', 401);
+    }
+    console.log(password, newPassword, user.password);
+
+    //recueprar la contraseña antigua de la base de datos
+    const [userInfo] = await connection.query(
+      `SELECT password FROM users WHERE id = ?`,
+      [id]
+    );
+
+    console.log(userInfo[0].password, password);
+
+    const validPassword = await bcrypt.compare(password, userInfo[0].password);
+    if (!validPassword) {
+      throw generateError('La contraseña antigua no es válida', 401);
+    }
+    //Encriptar la password
+
+    const encrypNewPassword = await bcrypt.hash(newPassword, 8);
+
+    // Guardar nueva password/
+    await connection.query(
+      `
+      UPDATE users
+      SET password=?
+      WHERE id=?
+    `,
+      [encrypNewPassword, id]
+    );
+
+    res.send({
+      status: 'ok',
+      message: `Password de ${id} usuario actualizada`,
+    });
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
+  }
+};
 
 const getUserLinksController = async (req, res, next) => {
   try {
@@ -236,6 +295,7 @@ module.exports = {
   getAnonymousUsersController,
   loginController,
   editUser,
+  editUserPassword,
   UserById,
   getMeController,
   getUserLinksController,
