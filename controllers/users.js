@@ -5,7 +5,10 @@ const { createUser, getUserById, getUserByEmail } = require('../db/users');
 const path = require('path');
 const sharp = require('sharp');
 const { nanoid } = require('nanoid');
-const { registrationSchema } = require('../schemas/schemas');
+const {
+  registrationSchema,
+  editUserPasswordSchema,
+} = require('../schemas/schemas');
 const { getConnection } = require('../db/db');
 const { getLinksByUserId } = require('../db/links');
 
@@ -225,7 +228,7 @@ const editUserPassword = async (req, res, next) => {
 
   try {
     connection = await getConnection();
-    await editUserPasswordSchema.validateAsync(req.body);
+    // await editUserPasswordSchema.validateAsync(req.body);
     const { id } = req.params; //
 
     const user = await UserById(id);
@@ -233,7 +236,7 @@ const editUserPassword = async (req, res, next) => {
     // Sacar  de req.body
     const { password, newPassword } = req.body;
 
-    if (!password || !newPasword) {
+    if (!password || !newPassword) {
       throw generateError('la contraseña no existe', 401);
     }
     console.log(password, newPassword, user.password);
@@ -266,7 +269,7 @@ const editUserPassword = async (req, res, next) => {
 
     res.send({
       status: 'ok',
-      message: `Password de ${id} usuario actualizada`,
+      message: `Password de usuario actualizada`,
     });
   } catch (error) {
     next(error);
