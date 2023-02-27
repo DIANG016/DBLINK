@@ -47,7 +47,7 @@ app.put('/user/:id', authUser,  editUser); //modificar usuario
 
 //Rutas de link
 app.post('/', authUser, newLinkController); //creo los link
-app.get('/', authUser, getLinksController); //listo los link, incluyendo los votos que tienen cada uno
+app.get('/', /*authUser, */getLinksController); //listo los link, incluyendo los votos que tienen cada uno
 app.get('/enlace/:id', authUser, getSingleLinkController, ); //Devuelvo un link
 app.delete('/enlace/:id',authUser, deleteLinkController); //borro un link
 

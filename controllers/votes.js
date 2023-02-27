@@ -62,8 +62,9 @@ const votesController = async (req, res, next) => {
     const { vote } = req.body;
     await createVotes(req.userId, enlace.id, vote);
     res.send({
-      data: vote,
-      message: `Has votado por el link con id: ${id} correctamente`,
+      status: 'ok',
+      message: 'Has votado correctamente',
+    
       
     });
  
