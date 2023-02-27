@@ -38,6 +38,7 @@ const validationLink = Joi.object().keys({
     .max(200)
     .error(new Error('La descripción debe tener máximo 200 caracteres')),
 });
+
 ////////////////////////////////////////////////////////////
 const editUserPasswordSchema = Joi.object().keys({
   password: Joi.string()
@@ -45,17 +46,17 @@ const editUserPasswordSchema = Joi.object().keys({
     .required()
     .error(
       new Error(
-        'El campo password debe existir y ser mayor de 8 caracteres',
+        'El campo Password debe existir y ser mayor de 8 caracteres',
         400
       )
     ),
   newPassword: Joi.string()
     .min(8)
     .required()
-    .invalid(Joi.ref('oldPassword'))
+    .invalid(Joi.ref('password'))
     .error(
       new Error(
-        'El campo newPassword debe existir, ser diferente a oldPassword y ser mayor de 8 caracteres',
+        'El campo newPassword debe existir, ser diferente a password y ser mayor de 8 caracteres',
         400
       )
     ),
