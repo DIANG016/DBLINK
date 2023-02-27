@@ -158,7 +158,7 @@ const editUser = async (req, res, next) => {
   */
 
   try {
-    await registrationSchema.validateAsync(req.body); //no podéis usar el mismo schema porque en este caso puede que no vayan algunos de los valores
+    //no podéis usar el mismo schema porque en este caso puede que no vayan algunos de los valores
     connection = await getConnection();
    
     const { id } = req.params; // 
@@ -182,10 +182,10 @@ const editUser = async (req, res, next) => {
     await connection.query(
       `
         UPDATE users
-        SET nombre=?, email=?, password=? ,biography=?
+        SET nombre=?, email=? ,biography=?
         WHERE id=?
       `,
-      [nombre, email, password, biography, id]
+      [nombre, email, biography, id]
     );
 
     res.send({
