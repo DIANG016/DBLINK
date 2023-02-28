@@ -42,21 +42,23 @@ const validationLink = Joi.object().keys({
 ////////////////////////////////////////////////////////////
 const editUserPasswordSchema = Joi.object().keys({
   password: Joi.string()
-    .min(8)
+    .min(6)
+    .max(20)
     .required()
     .error(
       new Error(
-        'El campo Password debe existir y ser mayor de 8 caracteres',
+        'Debes insertar tu password anterior para poder hacer un cambio de clave',
         400
       )
     ),
   newPassword: Joi.string()
-    .min(8)
+  .min(6)
+  .max(20)
     .required()
     .invalid(Joi.ref('password'))
     .error(
       new Error(
-        'El campo newPassword debe existir, ser diferente a password y ser mayor de 8 caracteres',
+        'La nueva password debe ser diferente a la password anterior y debe tener entre 6 y 20 caracteres',
         400
       )
     ),

@@ -152,13 +152,6 @@ const UserById = async (id) => {
 const editUser = async (req, res, next) => {
   let connection;
 
-  /*
-  Falta:
-  - soporte para la edición de foto✅
-  - si se envía contraseña debe encriptarla con bcrypt antes de meterla en la base de datos
-  - si queréis que soporte el cambio de contraseña en en frontend el usuario debería meterla 2 veces y comprobar si son iguales
-  - si no se envía foto (si req.files está vacío) no debería cambiar la foto actual. Esto se hace con lógica de "ifs"
-  */
 
   try {
     connection = await getConnection();
@@ -227,8 +220,8 @@ const editUserPassword = async (req, res, next) => {
   let connection;
 
   try {
+    await editUserPasswordSchema.validateAsync(req.body);
     connection = await getConnection();
-    // await editUserPasswordSchema.validateAsync(req.body);
     const { id } = req.params; //
 
     const user = await UserById(id);
