@@ -44,7 +44,7 @@ app.get('/user/:id/enlaces', /* authUser, */ getUserLinksController);
 app.get('/user', authUser, getMeController); // Aporta información de cada usuario
 app.post('/login', loginController); //nos permite logearnos
 app.put('/user/:id', authUser, editUser); //modificar usuario
-app.post('/user/:id/password', editUserPassword); // Editar password de usuario
+app.post('/user/:id/password', authUser, editUserPassword); // Editar password de usuario
 
 //Rutas de link
 app.post('/', authUser, newLinkController); //creo los link
