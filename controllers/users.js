@@ -152,7 +152,6 @@ const UserById = async (id) => {
 const editUser = async (req, res, next) => {
   let connection;
 
-
   try {
     connection = await getConnection();
 
@@ -171,6 +170,7 @@ const editUser = async (req, res, next) => {
         401
       );
     }
+    let photoFileName;
     //Procesar la photo
     if (req.files && req.files.photo) {
       //path del directorio uploads
@@ -198,7 +198,7 @@ const editUser = async (req, res, next) => {
         SET nombre=?, email=? ,biography=?, photo=? 
         WHERE id=?
       `,
-      [nombre, email, biography, photo, id]
+      [nombre, email, biography, photoFileName, id]
     );
 
     res.send({
