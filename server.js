@@ -9,6 +9,7 @@ const {
   anonymousUsers,
   getAnonymousUsersController,
   loginController,
+  editUserImage,
   editUser,
   editUserPassword,
   getMeController,
@@ -45,6 +46,7 @@ app.get('/user', authUser, getMeController); // Aporta información de cada usua
 app.post('/login', loginController); //nos permite logearnos
 app.put('/user/:id', authUser, editUser); //modificar usuario
 app.post('/user/:id/password', authUser, editUserPassword); // Editar password de usuario
+app.post('/user/:id/photo', authUser, editUserImage);
 
 //Rutas de link
 app.post('/', authUser, newLinkController); //creo los link
