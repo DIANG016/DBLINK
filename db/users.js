@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const { generateError } = require('../helpers');
 const { getConnection } = require('./db');
 
-
 // Devuelve la información pública de un usuario por su id
 const getUserByEmail = async (email) => {
   let connection;
@@ -27,34 +26,62 @@ const getUserByEmail = async (email) => {
   }
 };
 
-
-
 // Devuelve la información pública de un usuario por su id
 const getUserById = async (id) => {
-    let connection;
-  
-    try {
-      connection = await getConnection();
-  
-      const [result] = await connection.query(
-        `
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
         SELECT id, nombre, email, biography, photo, created_at FROM users WHERE id = ?
       `,
-        [id]
-      );
-  
-      if (result.length === 0) {
-        throw generateError('No hay ningún usuario con esa id', 404);
-      }
-  
-      return result[0];
-    } finally {
-      if (connection) connection.release();
+      [id]
+    );
+
+    if (result.length === 0) {
+      throw generateError('No hay ningún usuario con esa id', 404);
     }
-  };
+
+    return result[0];
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+/**
+ * Photo
+ */
+
+const createImage = async (id, photo = '') => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    const [userInfo] = await connection.query(
+      `SELECT password FROM users WHERE id = ?`,
+      [id]
+    );
+
+    const [result] = await connection.query(
+      `
+       UPDATE users
+       SET photo=?
+       WHERE id=?
+       
+       `,
+      [photo, id]
+    );
+
+    return result.insertId;
+  } finally {
+    if (connection) connection.release();
+  }
+};
 
 // Crea un usuario en la base de datos y devuelve su id
-const createUser = async (nombre, email, password, biography, photo = "") => {
+const createUser = async (nombre, email, password, biography, photo = '') => {
   let connection;
 
   try {
@@ -94,6 +121,8 @@ const createUser = async (nombre, email, password, biography, photo = "") => {
 
 module.exports = {
   createUser,
+
+  createImage,
   getUserById,
   getUserByEmail,
 };

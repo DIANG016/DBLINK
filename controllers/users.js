@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateError, createPathIfNotExists } = require('../helpers');
-const { createUser, getUserById, getUserByEmail } = require('../db/users');
+const {
+  createImage,
+  createUser,
+  getUserById,
+  getUserByEmail,
+} = require('../db/users');
 const path = require('path');
 const sharp = require('sharp');
 const { nanoid } = require('nanoid');
@@ -147,6 +152,64 @@ const UserById = async (id) => {
   }
 };
 
+////////////////////////////
+/**
+ * eEdit foto
+ *
+ * */
+
+const editUserImage = async (req, res, next) => {
+  try {
+    const { id } = req.params; //
+
+    // Sacar name y email de req.body
+    const { photo = '' } = req.body;
+    // Conseguir la información del link que quiero borrar
+
+    console.log('req.body', req.body, 'req.files', req.files);
+
+    const user = await UserById(id);
+    if (req.userId !== user.id) {
+      // Comprobar que el usuario del token es el mismo que creó el usuario
+      throw generateError(
+        'Estás intentando modificar los datos de otro usuario',
+        401
+      );
+    }
+
+    let photoFileName;
+    //if (req.files != null)
+    if (req.files && req.files.photo) {
+      //Procesar la photo
+      //path del directorio uploads
+      const uploadsDir = path.join(__dirname, '../uploads');
+
+      // Creo el directorio si no existe
+      await createPathIfNotExists(uploadsDir);
+      console.log(req.files.photo);
+      // Procesar la photo
+      const photo = sharp(req.files.photo.data);
+
+      photo.resize(1000);
+
+      // Guardo la photo con un nombre aleatorio en el directorio uploads
+      photoFileName = `${nanoid(24)}.jpg`;
+
+      await photo.toFile(path.join(uploadsDir, photoFileName));
+    }
+
+    const fail = await createImage(req.userId, photoFileName);
+
+    res.send({
+      status: 'ok',
+      message: 'Imagen actualizada',
+      data: fail, ////////////modificado//////////////////////
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //editar usuario
 
 const editUser = async (req, res, next) => {
@@ -170,7 +233,6 @@ const editUser = async (req, res, next) => {
         401
       );
     }
-
 
     // Actualizar los datos finales
 
