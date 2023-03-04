@@ -160,7 +160,7 @@ const editUser = async (req, res, next) => {
     const user = await UserById(id);
 
     // Sacar name y email de req.body
-    const { nombre, email, biography, photo = ' ' } = req.body;
+    const { nombre, email, biography } = req.body;
     // Conseguir la información del link que quiero borrar
 
     // Comprobar que el usuario del token es el mismo que creó el usuario
@@ -170,35 +170,17 @@ const editUser = async (req, res, next) => {
         401
       );
     }
-    let photoFileName;
-    //Procesar la photo
-    if (req.files && req.files.photo) {
-      //path del directorio uploads
-      const uploadsDir = path.join(__dirname, '../uploads');
 
-      // Creo el directorio si no existe
-      await createPathIfNotExists(uploadsDir);
-      console.log(req.files.photo);
-      // Procesar la photo
-      const photo = sharp(req.files.photo.data);
-
-      photo.resize(1000);
-
-      // Guardo la photo con un nombre aleatorio en el directorio uploads
-      photoFileName = `${nanoid(24)}.jpg`;
-
-      await photo.toFile(path.join(uploadsDir, photoFileName));
-    }
 
     // Actualizar los datos finales
 
     await connection.query(
       `
         UPDATE users
-        SET nombre=?, email=? ,biography=?, photo=? 
+        SET nombre=?, email=? ,biography=?
         WHERE id=?
       `,
-      [nombre, email, biography, photoFileName, id]
+      [nombre, email, biography, id]
     );
 
     res.send({
