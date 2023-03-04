@@ -163,6 +163,7 @@ const editUser = async (req, res, next) => {
     const { nombre, email, biography } = req.body;
     // Conseguir la información del link que quiero borrar
 
+
     // Comprobar que el usuario del token es el mismo que creó el usuario
     if (req.userId !== user.id) {
       throw generateError(
