@@ -23,6 +23,23 @@ const registrationSchema = Joi.object().keys({
     .error(new Error('La biografía debe tener máximo 200 caracteres')),
 });
 
+const editUserSchema = Joi.object().keys({
+  nombre: Joi.string()
+    .required()
+    .min(3)
+    .max(50)
+    .error(new Error('El nombre debe tener mínimo 3 caracteres')),
+  email: Joi.string()
+    .required()
+    .email()
+    .max(100)
+    .error(new Error('El email debe ser una direccion de email válida')),
+  biography: Joi.string()
+    .min(10)
+    .max(200)
+    .error(new Error('La biografía debe tener mínimo 10 caracteres y máximo 200 caracteres')),
+});
+
 const validationLink = Joi.object().keys({
   enlace: Joi.string().uri().error(new Error('Debe ser una url válida')),
   titulo: Joi.string()
@@ -64,4 +81,4 @@ const editUserPasswordSchema = Joi.object().keys({
     ),
 });
 
-module.exports = { registrationSchema, validationLink, editUserPasswordSchema };
+module.exports = { registrationSchema, validationLink, editUserPasswordSchema, editUserSchema };

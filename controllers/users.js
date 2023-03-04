@@ -13,6 +13,7 @@ const { nanoid } = require('nanoid');
 const {
   registrationSchema,
   editUserPasswordSchema,
+  editUserSchema,
 } = require('../schemas/schemas');
 const { getConnection } = require('../db/db');
 const { getLinksByUserId } = require('../db/links');
@@ -152,11 +153,7 @@ const UserById = async (id) => {
   }
 };
 
-////////////////////////////
-/**
- * eEdit foto
- *
- * */
+/* Editar Photo */
 
 const editUserImage = async (req, res, next) => {
   try {
@@ -203,7 +200,7 @@ const editUserImage = async (req, res, next) => {
     res.send({
       status: 'ok',
       message: 'Imagen actualizada',
-      data: fail, ////////////modificado//////////////////////
+      data: fail, 
     });
   } catch (error) {
     next(error);
@@ -216,6 +213,7 @@ const editUser = async (req, res, next) => {
   let connection;
 
   try {
+    await editUserSchema.validateAsync(req.body);
     connection = await getConnection();
 
     const { id } = req.params; //
@@ -340,4 +338,5 @@ module.exports = {
   UserById,
   getMeController,
   getUserLinksController,
+  editUserImage,
 };

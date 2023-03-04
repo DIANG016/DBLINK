@@ -121,7 +121,6 @@ const createUser = async (nombre, email, password, biography, photo = '') => {
 
 module.exports = {
   createUser,
-
   createImage,
   getUserById,
   getUserByEmail,
